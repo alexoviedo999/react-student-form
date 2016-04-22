@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import {Appbar, Form, Input, Button, Radio, Select, Option} from 'muicss/react';
 
 
 class App extends Component {
@@ -65,13 +66,14 @@ class App extends Component {
 				if (item.type === "select") {
 					return (
 						<div key={i}>
-							<select
+							<label for={'studenForm'+i}>{item.title}</label>
+							<Select
 								id={'studenForm'+i}
 								type='text'
 								onChange={(e) => this.handleUpdate(e.target.value, item)} value={this.state.student.residency}>
-								{item.options.map( (opt, i) => <option key={'option'+i} value={opt}>{opt}</option>)}
-							</select>
-							<label for={'studenForm'+i}>{item.title}</label>
+								{item.options.map( (opt, i) => <Option key={'option'+i} label={opt} value={opt}>{opt}</Option>)}
+							</Select>
+
 						</div>
 					)
 
@@ -79,11 +81,12 @@ class App extends Component {
 					return (
 						<div key={i}>
 							<label for={'studenForm'+i}>{item.title}</label>
-							{item.options.map( (opt, i) => <div><input
+							{item.options.map( (opt, i) => <div><Radio
 								type="radio"
 								id={'radio'+i}
 								key={'radio'+i}
 								value={opt}
+								label={opt}
 								onChange={(e) => this.handleUpdate(e.target.value, item)}
 								name={item.title} />
 							<label for={'radio'+i} >{opt}</label></div>) }
@@ -94,12 +97,14 @@ class App extends Component {
 				} else {
 					return (
 						<div key={i}>
-							<input
+							<Input
 								id={'studenForm'+i}
-								type='text'
+								type={item.title === "Name" ? "text": "date"}
+								label={item.title === "Name" ? "name": "date of birth"}
+								floatingLabel={true}
+								required={true}
 								onChange={(e) => this.handleUpdate(e.target.value, item)} value={item.type === "text" ? this.state.student.name : this.state.student.dob}
 								/>
-							<label for={'studenForm'+i}>{item.title}</label>
 						</div>
 					)
 				}
@@ -107,13 +112,13 @@ class App extends Component {
 
 		return (
 			<div>
-				<form student={this.state.student} onSubmit={()=> this.handleSubmit()}>
-
+				<Form student={this.state.student} onSubmit={()=> this.handleSubmit()}>
+					<legend>Education Partners Student Form</legend>
 					{formElements}
 
-					<button style={{color:'blue'}} type='submit'>Submit</button>
+					<Button variant="raised" type='submit'>Submit</Button>
 
-				</form>
+				</Form>
 			</div>
 		)
 	}
