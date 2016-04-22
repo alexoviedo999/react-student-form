@@ -1,47 +1,108 @@
 import React, {Component} from 'react';
-import Form  from 'react-json-editor';
 
-var schema = {
-  title      : "My pretty form",
-  description: "Declarative pure data DSLs are the best.",
-  type       : "object",
-  properties : {
-    comment: {
-      title      : "Your comment",
-      description: "Type something here.",
-      type       : "string",
-      minLength  : 1
-    }
-  }
-};
+const jsonDoc = {
+	"service": "http://api/students/",
+	"fields": [
+		{
+			"title": "Name",
+			"type": "text"
+		},
+		{
+			"title": "Date of Birth",
+			"type": "date"
+		},
+		{
+			"title": "Residency",
+			"type": "select",
+			"options": [
+				"In State",
+				"Out of State",
+				"Foreign"
+			]
+		},
+		{
+			"title": "Gender",
+			"type": "radio",
+			"options": [
+				"Male",
+				"Female"
+			]
+		}
+	]
+}
+
+// console.log('jsonDoc1', jsonDoc);
+// const blob = JSON.stringifyß(jsonDoc);
 
 class App extends Component {
 
-  constructor() {
-    super();
+	constructor() {
+		super();
 
-    this.state = {
-      schema: schema
-    }
+		const Student = {
+			name: 'joe',
+			dob: null,
+			residency: null,
+			gender: null
+		}
 
-    this.onSubmit = this.onSubmit.bind(this);
-  }
+		this.state = {
+		  jsonDoc: jsonDoc,
+		  student: Student,
+		  studentName: 'tom'
+		}
 
-	onSubmit (data, buttonValue, errors) {
-	  alert('Data  : '+JSON.stringify(data)+'\n'+
-	        'Button: '+buttonValue+'\n'+
-	        'Errors: '+JSON.stringify(errors));
-	};
-
-	render() {
-    const {schema} = this.state;
-		return (
-			<Form
-        schema   = {schema}
-        onSubmit = {this.onSubmit} />
-		)
+		this.handleSubmit = this.handleSubmit.bind(this);
+		this.handleNameUpdate = this.handleNameUpdate.bind(this);
 	}
 
+	handleNameUpdate(value){
+		// let {name} = this.state.student;
+
+
+		this.setState({
+	      student: {
+	        ...this.state.student,
+	        name: value
+	      }
+	    });
+		//
+		// this.setState({
+		//   student: Object.assign({}, student, { name: value });
+		// })
+	}
+
+	conponentWillMount () {
+		console.log('mount 1');
+	}
+
+	handleSubmit (e) {
+		e.preventDefault(); //why???
+	 	console.log('handle submit', e);
+	}
+
+	render() {
+
+		return (
+			<div>
+				<form student  = {this.state.student}>
+
+				<input
+		        	type='text'
+		        	onChange={(e) => this.handleNameUpdate(e.target.value)} value={this.state.student.name}/>
+					<h1>{this.state.student.name}</h1>
+
+					{/*<button style={{color:'blue'}} onClick={()=> this.handleSubmit()}>Submit</button>*/}
+
+				</form>
+			</div>
+		)
+	}
 }
+
+// App.propTypes = {
+// 	name: React.propTypes.string
+// }
+
 
 export default App;
