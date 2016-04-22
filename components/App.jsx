@@ -1,43 +1,14 @@
 import React, {Component} from 'react';
 
-const jsonDoc = {
-	"service": "http://api/students/",
-	"fields": [
-		{
-			"title": "Name",
-			"type": "text"
-		},
-		{
-			"title": "Date of Birth",
-			"type": "date"
-		},
-		{
-			"title": "Residency",
-			"type": "select",
-			"options": [
-				"In State",
-				"Out of State",
-				"Foreign"
-			]
-		},
-		{
-			"title": "Gender",
-			"type": "radio",
-			"options": [
-				"Male",
-				"Female"
-			]
-		}
-	]
-}
+
 
 // console.log('jsonDoc1', jsonDoc);
 // const blob = JSON.stringifyß(jsonDoc);
 
 class App extends Component {
 
-	constructor() {
-		super();
+	constructor(props) {
+		super(props);
 
 		const Student = {
 			name: 'joe',
@@ -47,18 +18,18 @@ class App extends Component {
 		}
 
 		this.state = {
-		  jsonDoc: jsonDoc,
-		  student: Student,
-		  studentName: 'tom'
+		  studentForm: this.props.studentForm,
+		  student: Student
 		}
 
 		this.handleSubmit = this.handleSubmit.bind(this);
 		this.handleNameUpdate = this.handleNameUpdate.bind(this);
 	}
 
+
+
 	handleNameUpdate(value){
 		// let {name} = this.state.student;
-
 
 		this.setState({
 	      student: {
@@ -83,14 +54,48 @@ class App extends Component {
 
 	render() {
 
+		const formElements = this.state.studentForm.fields.map((item, i)=> {
+				if (item.type === "select") {
+					return (
+						<div key={i}>
+							<select
+								id={'studenForm'+i}
+								type='text'
+								onChange={(e) => this.handleNameUpdate(e.target.value)} value={this.state.student.name}>
+								{item.options.map( opt => <option value={opt}>{opt}</option>)}
+							</select>
+							<label for={'studenForm'+i}>{item.title}</label>
+						</div>
+					)
+
+				} else if (item.type === "radio") {
+					return (
+						<div key={i}>
+
+							{item.options.map(opt => <input type="radio" value={opt} name={item.title}/>) }
+							<label for={'studenForm'+i}>{item.title}</label>
+						</div>
+					)
+
+				} else {
+					return (
+						<div key={i}>
+							<input
+								id={'studenForm'+i}
+								type='text'
+								onChange={(e) => this.handleNameUpdate(e.target.value)} value={this.state.student.name}
+								/>
+							<label for={'studenForm'+i}>{item.title}</label>
+						</div>
+					)
+				}
+		});
+
 		return (
 			<div>
 				<form student  = {this.state.student}>
 
-				<input
-		        	type='text'
-		        	onChange={(e) => this.handleNameUpdate(e.target.value)} value={this.state.student.name}/>
-					<h1>{this.state.student.name}</h1>
+					{formElements}
 
 					{/*<button style={{color:'blue'}} onClick={()=> this.handleSubmit()}>Submit</button>*/}
 
