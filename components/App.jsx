@@ -1,21 +1,18 @@
 import React, {Component} from 'react';
 
 
-
-// console.log('jsonDoc1', jsonDoc);
-// const blob = JSON.stringifyß(jsonDoc);
-
 class App extends Component {
 
 	constructor(props) {
 		super(props);
 
 		const Student = {
-			name: 'joe',
-			dob: null,
-			residency: null,
-			gender: null
+			name: '',
+			dob: '',
+			residency: '',
+			gender: ''
 		}
+		//are properties necessary in Student?
 
 		this.state = {
 		  studentForm: this.props.studentForm,
@@ -23,46 +20,56 @@ class App extends Component {
 		}
 
 		this.handleSubmit = this.handleSubmit.bind(this);
-		this.handleNameUpdate = this.handleNameUpdate.bind(this);
+		this.handleUpdate = this.handleUpdate.bind(this);
 	}
 
 
-
-	handleNameUpdate(value){
+	handleUpdate(value, type){
 		// let {name} = this.state.student;
+		// debugger;
+		var studentKey;
+
+		if (type.title === 'Name') {
+			studentKey = 'name';
+		} else if (type.title === 'Date of Birth') {
+			studentKey = 'dob';
+		} else if (type.title === 'Residency') {
+			studentKey = 'residency';
+		} else {
+			studentKey = 'gender';
+		}
 
 		this.setState({
-	      student: {
-	        ...this.state.student,
-	        name: value
-	      }
-	    });
-		//
+		  student: {
+			...this.state.student,
+			[studentKey]: value
+		  }
+		});
+
 		// this.setState({
-		//   student: Object.assign({}, student, { name: value });
-		// })
+		//   student: Object.assign({}, this.state.student, { [studentKey]: value })
+	    // });
+
+		console.log('state', this.state.student);
 	}
 
-	conponentWillMount () {
-		console.log('mount 1');
-	}
-
-	handleSubmit (e) {
-		e.preventDefault(); //why???
-	 	console.log('handle submit', e);
+	handleSubmit () {
+		// debugger;
+		// e.preventDefault(); //why???
+	 	console.log('student submit', this.state.student);
 	}
 
 	render() {
 
-		const formElements = this.state.studentForm.fields.map((item, i)=> {
+		const formElements = this.state.studentForm.fields.map((item, i) => {
 				if (item.type === "select") {
 					return (
 						<div key={i}>
 							<select
 								id={'studenForm'+i}
 								type='text'
-								onChange={(e) => this.handleNameUpdate(e.target.value)} value={this.state.student.name}>
-								{item.options.map( opt => <option value={opt}>{opt}</option>)}
+								onChange={(e) => this.handleUpdate(e.target.value, item)} value={this.state.student.residency}>
+								{item.options.map( (opt, i) => <option key={'option'+i} value={opt}>{opt}</option>)}
 							</select>
 							<label for={'studenForm'+i}>{item.title}</label>
 						</div>
@@ -71,9 +78,16 @@ class App extends Component {
 				} else if (item.type === "radio") {
 					return (
 						<div key={i}>
-
-							{item.options.map(opt => <input type="radio" value={opt} name={item.title}/>) }
 							<label for={'studenForm'+i}>{item.title}</label>
+							{item.options.map( (opt, i) => <div><input
+								type="radio"
+								id={'radio'+i}
+								key={'radio'+i}
+								value={opt}
+								onChange={(e) => this.handleUpdate(e.target.value, item)}
+								name={item.title} />
+							<label for={'radio'+i} >{opt}</label></div>) }
+
 						</div>
 					)
 
@@ -83,7 +97,7 @@ class App extends Component {
 							<input
 								id={'studenForm'+i}
 								type='text'
-								onChange={(e) => this.handleNameUpdate(e.target.value)} value={this.state.student.name}
+								onChange={(e) => this.handleUpdate(e.target.value, item)} value={item.type === "text" ? this.state.student.name : this.state.student.dob}
 								/>
 							<label for={'studenForm'+i}>{item.title}</label>
 						</div>
@@ -93,11 +107,11 @@ class App extends Component {
 
 		return (
 			<div>
-				<form student  = {this.state.student}>
+				<form student={this.state.student} onSubmit={()=> this.handleSubmit()}>
 
 					{formElements}
 
-					{/*<button style={{color:'blue'}} onClick={()=> this.handleSubmit()}>Submit</button>*/}
+					<button style={{color:'blue'}} type='submit'>Submit</button>
 
 				</form>
 			</div>
