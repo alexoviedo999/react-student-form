@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Appbar, Form, Input, Button, Radio, Select, Option} from 'muicss/react';
+import {Appbar, Form, Input, Button, Radio, Select, Option, Container, Panel} from 'muicss/react';
 
 
 class App extends Component {
@@ -89,7 +89,7 @@ class App extends Component {
 								label={opt}
 								onChange={(e) => this.handleUpdate(e.target.value, item)}
 								name={item.title} />
-							<label for={'radio'+i} >{opt}</label></div>) }
+						</div>) }
 
 						</div>
 					)
@@ -111,15 +111,22 @@ class App extends Component {
 		});
 
 		return (
-			<div>
-				<Form student={this.state.student} onSubmit={()=> this.handleSubmit()}>
-					<legend>Education Partners Student Form</legend>
-					{formElements}
+			<Container style={{maxWidth: '600px', marginTop: '30px'}}>
+				<Panel>
+					<Form student={this.state.student} onSubmit={()=> this.handleSubmit()}>
+						<legend style={{textAlign: 'center'}}>Education Partners Student Form</legend>
+						{formElements}
 
-					<Button variant="raised" type='submit'>Submit</Button>
+						<div className="mui--text-center">
+							<Button variant="raised" type='submit'>Submit</Button>
+						</div>
 
-				</Form>
-			</div>
+
+					</Form>
+
+				</Panel>
+
+			</Container>
 		)
 	}
 }
