@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import App from './components/App.jsx';
 
 const jsonDoc = {
-	"service": "http://api/students/",
+	"service": "http://httpbin.org/post",
 	"fields": [
 		{
 			"title": "Name",

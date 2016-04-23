@@ -30,7 +30,6 @@ class App extends Component {
 
 	handleUpdate(value, type){
 		var studentKey;
-
 		if (type.title === 'Name') {
 			studentKey = 'name';
 		} else if (type.title === 'Date of Birth') {
@@ -66,65 +65,63 @@ class App extends Component {
 		  .then(function(response) {
 		    return response.json()
 		  }).then(function(body) {
-		    console.log('success');
+		    console.log('success', body);
 		  }).catch(function(error) {
 	    	console.log('student form request failed', error)
 	      });
 
-	 	console.log('jsonStudent', jsonStudent);
+			console.log('jsonStudent', jsonStudent);
 	}
 
 	render() {
 
 		const formElements = this.state.studentForm.fields.map((item, i) => {
-				if (item.type === "select") {
-					return (
-						<div key={i}>
-							<label for={'studenForm'+i}>{item.title}</label>
-							<Select
-								defaultValue={item.options[0]}
-								id={'studenForm'+i}
-								type='select'
-								onChange={(e) => this.handleUpdate(e.target.value, item)} value={this.state.student.residency}>
-									{item.options.map( (opt, i) => <Option key={'option'+i}
-									label={opt}
-									value={opt}>{opt}</Option>)}
-							</Select>
-						</div>
-					)
-
-				} else if (item.type === "radio") {
-					return (
-						<div key={i}>
-							<label for={'studenForm'+i}>{item.title}</label>
-							{item.options.map( (opt, i) => <div key={'radio'+i}>
-							<Radio
-								type="radio"
-								id={'radio'+i}
-								value={opt}
+			if (item.type === "select") {
+				return (
+					<div key={i}>
+						<label for={'studenForm'+i}>{item.title}</label>
+						<Select
+							defaultValue={item.options[0]}
+							onChange={(value) => this.handleUpdate(value, item)}>
+								{item.options.map( (opt, i) => <Option key={'option'+i}
 								label={opt}
-								onClick={(e) => this.handleUpdate(e.target.value, item)}
-								name={item.title} />
-							</div>) }
-						</div>
-					)
+								value={opt} />)}
+						</Select>
+					</div>
+				)
 
-				} else {
-					return (
-						<div key={i}>
-							<Input
-								id={'studenForm'+i}
-								style={{WebkitBoxShadow: '0 0 0px 1000px white inset'}}
-								type='text'
-								label={item.title === "Name" ? "name": "date of birth mm/dd/yyyy"}
-								pattern={item.type === 'date' ? '\\d{1,2}\\/\\d{1,2}\\/\\d{4}': undefined}
-								floatingLabel={true}
-								required={true}
-								onChange={(e) => this.handleUpdate(e.target.value, item)} value={item.type === "text" ? this.state.student.name : this.state.student.dob}
-								/>
-						</div>
-					)
-				}
+			} else if (item.type === "radio") {
+				return (
+					<div key={i}>
+						<label for={'studenForm'+i}>{item.title}</label>
+						{item.options.map( (opt, i) => <div key={'radio'+i}>
+						<Radio
+							type="radio"
+							id={'radio'+i}
+							value={opt}
+							label={opt}
+							onClick={(e) => this.handleUpdate(e.target.value, item)}
+							name={item.title} />
+						</div>) }
+					</div>
+				)
+
+			} else {
+				return (
+					<div key={i}>
+						<Input
+							id={'studenForm'+i}
+							style={{WebkitBoxShadow: '0 0 0px 1000px white inset'}}
+							type='text'
+							label={item.title === "Name" ? "name": "date of birth mm/dd/yyyy"}
+							pattern={item.type === 'date' ? '\\d{1,2}\\/\\d{1,2}\\/\\d{4}': undefined}
+							floatingLabel={true}
+							required={true}
+							onChange={(e) => this.handleUpdate(e.target.value, item)} value={item.type === "text" ? this.state.student.name : this.state.student.dob}
+							/>
+					</div>
+				)
+			}
 		});
 
 		return (
