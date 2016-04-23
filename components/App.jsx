@@ -70,7 +70,7 @@ class App extends Component {
 	    	console.log('student form request failed', error)
 	      });
 
-			console.log('jsonStudent', jsonStudent);
+		//   console.log('jsonStudent', jsonStudent);
 	}
 
 	render() {
@@ -95,13 +95,14 @@ class App extends Component {
 					<div key={i}>
 						<label>{item.title}</label>
 						{item.options.map( (opt, i) => <div key={'radio'+i}>
-						<Radio
-							type="radio"
-							id={'radio'+i}
-							value={opt}
-							label={opt}
-							onClick={(e) => this.handleUpdate(e.target.value, item)}
-							name={item.title} />
+							<Radio
+								type="radio"
+								id={'radio'+i}
+								value={opt}
+								defaultChecked={i === 0 ? true : false}
+								label={opt}
+								onClick={(e) => this.handleUpdate(e.target.value, item)}
+								name={item.title} />
 						</div>) }
 					</div>
 				)
@@ -113,7 +114,7 @@ class App extends Component {
 							id={'studenForm'+i}
 							style={{WebkitBoxShadow: '0 0 0px 1000px white inset'}}
 							type='text'
-							label={item.title === "Name" ? "name": "date of birth mm/dd/yyyy"}
+							label={item.title === "Name" ? "name": "date of birth (mm/dd/yyyy)"}
 							pattern={item.type === 'date' ? '\\d{1,2}\\/\\d{1,2}\\/\\d{4}': undefined}
 							floatingLabel={true}
 							required={true}
