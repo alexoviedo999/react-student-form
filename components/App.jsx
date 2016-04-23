@@ -79,7 +79,7 @@ class App extends Component {
 			if (item.type === "select") {
 				return (
 					<div key={i}>
-						<label for={'studenForm'+i}>{item.title}</label>
+						<label>{item.title}</label>
 						<Select
 							defaultValue={item.options[0]}
 							onChange={(value) => this.handleUpdate(value, item)}>
@@ -93,7 +93,7 @@ class App extends Component {
 			} else if (item.type === "radio") {
 				return (
 					<div key={i}>
-						<label for={'studenForm'+i}>{item.title}</label>
+						<label>{item.title}</label>
 						{item.options.map( (opt, i) => <div key={'radio'+i}>
 						<Radio
 							type="radio"
