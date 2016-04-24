@@ -98,14 +98,12 @@ class App extends Component {
 		  }).then(() => {
 			this.resetForm ();
 			this.setState({ formSuccess: true });
-
 		  }).catch(function(error) {
 	    	console.log('student form request failed', error)
 	      });
 	}
 
 	render() {
-		// debugger;
 		return (
 			<Container style={{maxWidth: '600px', marginTop: '30px'}}>
 				<Panel>
