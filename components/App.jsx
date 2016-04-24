@@ -26,6 +26,7 @@ class App extends Component {
 
 		this.handleSubmit = this.handleSubmit.bind(this);
 		this.handleUpdate = this.handleUpdate.bind(this);
+		this.submitValidator = this.submitValidator.bind(this);
 	}
 
 
@@ -52,19 +53,22 @@ class App extends Component {
 		});
 	}
 
-	handleSubmit (e) {
-		e.preventDefault();
-
+	submitValidator () {
 		if (!this.state.student.residency) {
 			this.state.student.residency = this.state.studentForm.fields[2].options[0];
 		}
 		if (!this.state.student.gender) {
-			console.log('no gender');
 			this.setState({ genderValidate: true });
 			return;
 		}
-
 		this.setState({ genderValidate: false });
+	}
+
+	handleSubmit (e) {
+		e.preventDefault();
+
+		this.submitValidator();
+
 		const jsonStudent = JSON.stringify(this.state.student);
 
 		fetch(this.state.studentForm.service, {
@@ -90,10 +94,9 @@ class App extends Component {
 	render() {
 		const validateStyle = {
 			validateOn: {
-				display: 'block',
+				display: 'inline-block',
 				position: 'relative',
 			    left: '75px',
-				top: '-20px',
 			    color: 'red',
 			    textDecoration: 'underline'
 			},
@@ -169,10 +172,6 @@ class App extends Component {
 		)
 	}
 }
-
-// App.propTypes = {
-// 	name: React.propTypes.string
-// }
 
 
 export default App;
