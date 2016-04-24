@@ -19,7 +19,6 @@ const SuccessBanner = (props) => {
       <Appbar style={bannerState ? appBarStyle.sentBannerStyle : appBarStyle.noBannnerStyle} >
         <div className="mui--text-center mui--appbar-height mui--appbar-line-height">
           Thank you, your form has been sent.
-          <h5>{bannerState}</h5>
         </div>
       </Appbar>
     </div>

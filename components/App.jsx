@@ -23,7 +23,7 @@ class App extends Component {
 		  studentForm: this.props.studentForm,
 		  student: {},
 		  genderValidate: false,
-		  formSent: false
+		  formSuccess: false
 		}
 
 		this.handleSubmit = this.handleSubmit.bind(this);
@@ -45,7 +45,7 @@ class App extends Component {
 		} else if (type.title === 'Gender') {
 			studentKey = 'gender';
 		} else {
-			alert("Sorry, didn't work")
+			console.log("form error");
 		}
 
 		//set student state
@@ -78,10 +78,11 @@ class App extends Component {
 
 	handleSubmit (e) {
 		e.preventDefault();
+		const {student, studentForm} = this.state;
 
 		//validate residency and gender data
-		if (!this.state.student.residency) {
-			this.state.student.residency = this.state.studentForm.fields[2].options[0];
+		if (!student.residency) {
+			student.residency = studentForm.fields[2].options[0];
 		}
 		if (!this.state.student.gender) {
 			this.setState({ genderValidate: true });
@@ -89,10 +90,9 @@ class App extends Component {
 		}
 		this.setState({ genderValidate: false });
 
-
 		//api post
-		const jsonStudent = JSON.stringify(this.state.student);
-		fetch(this.state.studentForm.service, {
+		const jsonStudent = JSON.stringify(student);
+		fetch(studentForm.service, {
 			method: 'POST',
 			headers: {
 			    'Accept': 'application/json',
@@ -106,7 +106,7 @@ class App extends Component {
 		    console.log('success', body);
 		  }).then(() => {
 			this.resetForm ();
-			this.setState({ formSent: true });
+			this.setState({ formSuccess: true });
 
 		  }).catch(function(error) {
 	    	console.log('student form request failed', error)
@@ -114,6 +114,7 @@ class App extends Component {
 	}
 
 	render() {
+		const {student, studentForm, genderValidate, formSuccess} = this.state;
 		const validateStyle = {
 			validateOn: {
 				display: 'inline-block',
@@ -127,18 +128,18 @@ class App extends Component {
 			}
 		}
 
-		const formElements = this.state.studentForm.fields.map((item, i) => {
+		const formElements = studentForm.fields.map((item, i) => {
 			if (item.type === "select") {
 				return (
 					<div key={i}>
 						<label>{item.title}</label>
-							<Select
-								value={this.state.student.residency}
-								onChange={(e) => this.handleUpdate(e, item)}>
-									{item.options.map( (opt, i) => <Option key={'option'+i}
-									label={opt}
-									value={opt} />)}
-							</Select>
+						<Select
+							value={student.residency}
+							onChange={(e) => this.handleUpdate(e, item)}>
+								{item.options.map( (opt, i) => <Option key={'option'+i}
+								label={opt}
+								value={opt} />)}
+						</Select>
 					</div>
 				)
 
@@ -146,7 +147,7 @@ class App extends Component {
 				return (
 					<div key={i}>
 						<label>{item.title}</label>
-						<span style={this.state.genderValidate ? validateStyle.validateOn : validateStyle.validateOff}>Please Select Gender!</span>
+						<span style={genderValidate ? validateStyle.validateOn : validateStyle.validateOff}>Please Select Gender!</span>
 						{item.options.map( (opt, i) => <div key={'radio'+i}>
 							<Radio
 								type="radio"
@@ -170,7 +171,7 @@ class App extends Component {
 							pattern={item.type === 'date' ? '\\d{1,2}\\/\\d{1,2}\\/\\d{4}': undefined}
 							floatingLabel={true}
 							required={true}
-							onChange={(e) => this.handleUpdate(e.target.value, item)} value={item.type === "text" ? this.state.student.name : this.state.student.dob}
+							onChange={(e) => this.handleUpdate(e.target.value, item)} value={item.type === "text" ? student.name : student.dob}
 							/>
 					</div>
 				)
@@ -180,7 +181,7 @@ class App extends Component {
 		return (
 			<Container style={{maxWidth: '600px', marginTop: '30px'}}>
 				<Panel>
-					<Form student={this.state.student} onSubmit={(e)=> this.handleSubmit(e)}>
+					<Form student={student} onSubmit={(e)=> this.handleSubmit(e)}>
 						<legend style={{textAlign: 'center'}}>
 							Education Partners Student Form
 						</legend>
@@ -193,9 +194,7 @@ class App extends Component {
 						</div>
 					</Form>
 				</Panel>
-				<SuccessBanner
-					bannerState={this.state.formSent}
-					/>
+				<SuccessBanner bannerState={formSuccess}/>
 			</Container>
 		)
 	}
