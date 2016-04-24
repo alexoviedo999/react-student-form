@@ -20,7 +20,8 @@ class App extends Component {
 
 		this.state = {
 		  studentForm: this.props.studentForm,
-		  student: {}
+		  student: {},
+		  genderValidate: false
 		}
 
 		this.handleSubmit = this.handleSubmit.bind(this);
@@ -36,6 +37,7 @@ class App extends Component {
 			studentKey = 'dob';
 		} else if (type.title === 'Residency') {
 			studentKey = 'residency';
+			this.setState({value: value});
 		} else if (type.title === 'Gender') {
 			studentKey = 'gender';
 		} else {
@@ -52,6 +54,17 @@ class App extends Component {
 
 	handleSubmit (e) {
 		e.preventDefault();
+
+		if (!this.state.student.residency) {
+			this.state.student.residency = this.state.studentForm.fields[2].options[0];
+		}
+		if (!this.state.student.gender) {
+			console.log('no gender');
+			this.setState({ genderValidate: true });
+			return;
+		}
+
+		this.setState({ genderValidate: false });
 		const jsonStudent = JSON.stringify(this.state.student);
 
 		fetch(this.state.studentForm.service, {
@@ -73,20 +86,34 @@ class App extends Component {
 		//   console.log('jsonStudent', jsonStudent);
 	}
 
+
 	render() {
+		const validateStyle = {
+			validateOn: {
+				display: 'block',
+				position: 'relative',
+			    left: '75px',
+				top: '-20px',
+			    color: 'red',
+			    textDecoration: 'underline'
+			},
+			validateOff: {
+				display: 'none'
+			}
+		}
 
 		const formElements = this.state.studentForm.fields.map((item, i) => {
 			if (item.type === "select") {
 				return (
 					<div key={i}>
 						<label>{item.title}</label>
-						<Select
-							defaultValue={item.options[0]}
-							onChange={(value) => this.handleUpdate(value, item)}>
-								{item.options.map( (opt, i) => <Option key={'option'+i}
-								label={opt}
-								value={opt} />)}
-						</Select>
+							<Select
+								value={this.state.student.residency}
+								onChange={(e) => this.handleUpdate(e, item)}>
+									{item.options.map( (opt, i) => <Option key={'option'+i}
+									label={opt}
+									value={opt} />)}
+							</Select>
 					</div>
 				)
 
@@ -94,12 +121,12 @@ class App extends Component {
 				return (
 					<div key={i}>
 						<label>{item.title}</label>
+						<span style={this.state.genderValidate ? validateStyle.validateOn : validateStyle.validateOff}>Please Select Gender!</span>
 						{item.options.map( (opt, i) => <div key={'radio'+i}>
 							<Radio
 								type="radio"
 								id={'radio'+i}
 								value={opt}
-								defaultChecked={i === 0 ? true : false}
 								label={opt}
 								onClick={(e) => this.handleUpdate(e.target.value, item)}
 								name={item.title} />
