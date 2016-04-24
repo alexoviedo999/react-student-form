@@ -26,12 +26,13 @@ class App extends Component {
 
 		this.handleSubmit = this.handleSubmit.bind(this);
 		this.handleUpdate = this.handleUpdate.bind(this);
-		this.submitValidator = this.submitValidator.bind(this);
+		this.resetForm = this.resetForm.bind(this);
 	}
-
 
 	handleUpdate(value, type){
 		var studentKey;
+
+		//map values in json document to student json
 		if (type.title === 'Name') {
 			studentKey = 'name';
 		} else if (type.title === 'Date of Birth') {
@@ -45,6 +46,7 @@ class App extends Component {
 			alert("Sorry, didn't work")
 		}
 
+		//set student state
 		this.setState({
 		  student: {
 			...this.state.student,
@@ -53,7 +55,29 @@ class App extends Component {
 		});
 	}
 
-	submitValidator () {
+	resetForm () {
+		this.setState({ student: {} });
+		var inputs = document.getElementsByTagName('input');
+		var inputsArray = Array.from(inputs);
+
+		inputsArray.forEach((input) => {
+			if(input.getAttribute('type') ==='radio'){
+				input.checked=false;
+			}
+		});
+
+		var invalidInputs = document.getElementsByClassName('mui--is-not-empty mui--is-dirty');
+
+		var invalidInputsArray = Array.from(invalidInputs);
+		invalidInputsArray.forEach((input) => {
+			input.className = "mui--is-empty";
+		})
+	}
+
+	handleSubmit (e) {
+		e.preventDefault();
+
+		//validate residency and gender data
 		if (!this.state.student.residency) {
 			this.state.student.residency = this.state.studentForm.fields[2].options[0];
 		}
@@ -62,15 +86,10 @@ class App extends Component {
 			return;
 		}
 		this.setState({ genderValidate: false });
-	}
 
-	handleSubmit (e) {
-		e.preventDefault();
 
-		this.submitValidator();
-
+		//api post
 		const jsonStudent = JSON.stringify(this.state.student);
-
 		fetch(this.state.studentForm.service, {
 			method: 'POST',
 			headers: {
@@ -83,11 +102,12 @@ class App extends Component {
 		    return response.json()
 		  }).then(function(body) {
 		    console.log('success', body);
+		  }).then(() => {
+			this.resetForm ();
+
 		  }).catch(function(error) {
 	    	console.log('student form request failed', error)
 	      });
-
-		//   console.log('jsonStudent', jsonStudent);
 	}
 
 
@@ -159,15 +179,19 @@ class App extends Component {
 			<Container style={{maxWidth: '600px', marginTop: '30px'}}>
 				<Panel>
 					<Form student={this.state.student} onSubmit={(e)=> this.handleSubmit(e)}>
-						<legend style={{textAlign: 'center'}}>Education Partners Student Form</legend>
+						<legend style={{textAlign: 'center'}}>
+							Education Partners Student Form
+						</legend>
+						<p style={{textAlign: 'center', color: 'gray'}}>*All fields are mandatory</p>
 
 						{formElements}
 
 						<div className="mui--text-center">
-							<Button variant="raised" type='submit'>Submit</Button>
+							<Button variant="raised" type='submit'>Send</Button>
 						</div>
 					</Form>
 				</Panel>
+
 			</Container>
 		)
 	}
