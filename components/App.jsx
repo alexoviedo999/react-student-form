@@ -12,6 +12,7 @@ import {
 } from 'muicss/react';
 import 'es6-promise';
 import 'whatwg-fetch';
+import SuccessBanner from './SuccessBanner.jsx';
 
 class App extends Component {
 
@@ -21,7 +22,8 @@ class App extends Component {
 		this.state = {
 		  studentForm: this.props.studentForm,
 		  student: {},
-		  genderValidate: false
+		  genderValidate: false,
+		  formSent: false
 		}
 
 		this.handleSubmit = this.handleSubmit.bind(this);
@@ -104,12 +106,12 @@ class App extends Component {
 		    console.log('success', body);
 		  }).then(() => {
 			this.resetForm ();
+			this.setState({ formSent: true });
 
 		  }).catch(function(error) {
 	    	console.log('student form request failed', error)
 	      });
 	}
-
 
 	render() {
 		const validateStyle = {
@@ -191,7 +193,9 @@ class App extends Component {
 						</div>
 					</Form>
 				</Panel>
-
+				<SuccessBanner
+					bannerState={this.state.formSent}
+					/>
 			</Container>
 		)
 	}
