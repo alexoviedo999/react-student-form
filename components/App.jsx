@@ -92,6 +92,7 @@ class App extends Component {
 			body: jsonStudent
 		})
 		  .then(function(response) {
+			console.log('response', response);
 		    return response.json()
 		  }).then(function(body) {
 		    console.log('success', body);
