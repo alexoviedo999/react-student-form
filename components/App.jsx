@@ -91,17 +91,20 @@ class App extends Component {
 			},
 			body: jsonStudent
 		})
-		  .then(function(response) {
+		.then(function(response) {
 			console.log('response', response);
 		    return response.json()
-		  }).then(function(body) {
+		})
+		.then(function(body) {
 		    console.log('success', body);
-		  }).then(() => {
+		})
+		.then(() => {
 			this.resetForm ();
 			this.setState({ formSuccess: true });
-		  }).catch(function(error) {
-	    	console.log('student form request failed', error)
-	      });
+		})
+		.catch(function(error) {
+    		console.log('student form request failed', error)
+        });
 	}
 
 	render() {

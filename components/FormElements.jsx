@@ -66,7 +66,7 @@ const FormElements = (props) => {
             id={'studenForm' + i}
             style={validateStyle.inputNoYello}
             type="text"
-            label={item.title === 'Name' ? 'name' : 'date of birth (mm/dd/yyyy)'}
+            label={item.title === 'Name' ? 'Name' : 'Date of Birth (mm/dd/yyyy)'}
             pattern={item.type === 'date' ? '\\d{1,2}\\/\\d{1,2}\\/\\d{4}' : undefined}
             floatingLabel={true}
             required={true}
